@@ -28,104 +28,59 @@
 
 import sys
 
-global counter
-
-def merge_ascent_inplace(target_ar, start_1, len_1, start_2, len_2):
-    ### input explanation ###
-    # target_ar : ar to sort
-    # start_1 : start of fisrt ar
-    # len_1 : length of first ar
-    # start_2 : start of second ar
-    # len_2 : length fo second ar
-    ### input exlpanation end ###
-
-    # end_1 : end of first ar
-    # end_2 : end of second_ar
-
-    # first ar and second ar are connected.
-    # so, {end_1} should be {start_2 - 1}
-    
-    global counter
-
-    end_1 = start_1 + len_1 - 1  
-    end_2 = start_2 + len_2 - 1
-
-    # result values
-    start_result = start_1 # not necessary, {start_result} == {start_1}
-    len_result = len_1 + len_2
-
-    # if already sorted -> end quickly
-    if target_ar[end_1] <= target_ar[start_2]:
-        return start_result, len_result
-
-    # i : index for first ar. also mean elements sorted before i. i goes from start_1 to end_2
-    # j : index for second ar. j goes from start_2 to end_2
-    i = start_1  
-    j = start_2  
-
-    # main merge inplace sorting algorithm
-    # while (i <= end_1) & (j <= end_2):# while (i < start_1 + len_1) & (j < start_2 + len_2):
-    while (i <= end_2):
-        if (j > end_2) | (i == j):
-            break
-
-        if target_ar[i] <= target_ar[j]:
-            i += 1
-        else:  # target_ar[i] > target_ar[j]:  # inversion
-            target_ar.insert(i, target_ar.pop(j))
-            counter += 1
-            i += 1
-            j += 1
-
-    return start_result, len_result
-
-def merge_sort_ascent(target_ar):
-    # algorithm get 2 parts, and merge each parts into a part.
-    # part means sorted subset
-    # algorithm proceeds until the subset becomes a whole.
-    
-    queue = list()
-    # element type : list
-    # element overview : [index, length]
-    # index : start of element
-    # length : length of element
-    # elements mean subset of target_ar
-
-    # queue have information of sorted subset.
-    # algorithm merges the subsets in the queue to make one.
-
-    # merge sort starts from 1 length elements.
-    for i in range(len(target_ar)):
-        queue.append([i, 1])
-
-    while(True):
-        # Must have at least 2 subsets to merge.
-        if len(queue) > 1: 
-            # queue[n][0] means index of nth subset.
-            # This condition exists to confirm that subsets pair properly.
-            # When there is an odd number of subsets to be merged, one subset left.
-            # The remaining subset must be sent back to the back of the queue
-            if queue[0][0] < queue[1][0]: 
-                target1 = queue.pop(0) # used elements are removed
-                target2 = queue.pop(0)
-                # def merge_ascent_inplace(target_ar, start_1, len_1, start_2, len_2)
-                # make two subsets into one sorted subset
-                queue.append(list(merge_ascent_inplace(target_ar, target1[0], target1[1], target2[0], target2[1])))
-            else:
-                queue.append(queue.pop(0)) # re: The remaining subset must be sent back to the back of the queue
-        else: # len(queue) <= 1
-            # queue[0] == (0,len(target_ar)):
-            # one last element should be [0, len(target_ar)]
-            break
-
 if __name__ == "__main__":
     sys.stdin = open("counting inversions of the duplicated sequence\input_cnt_inv_dup_seq.txt", "r")
     T = int(input())
 
-    for i in range(1, T + 1):
-        counter = 0
-        _, iter_num = map(int, input().split())
-        trg_ar = list(input().split()) * iter_num
-        merge_sort_ascent(trg_ar)
+    for t in range(1, T + 1):
+        # inversion_cnt : type int, counter for number of inversion.
+        inversion_cnt = 0
+        # repeated_cnt : type int, counter for number of repeated number.
+        repeated_cnt = 0
 
-        print(f"#{i} {counter}")
+        # raw_len : type int, a length of unit array
+        # dup_num : type int, a number of the unit array is repeated
+        raw_len, dup_num = map(int, input().split())
+        # raw_ar : type list[int], a unit array.
+        raw_ar = list(map(int, input().split()))
+
+        # print(f"case : {raw_len} {dup_num}\n{raw_ar}")
+
+        if raw_len == 1:
+            print(f"#{t} {inversion_cnt}") # inversion_cnt == 0
+            continue
+
+        # count inversion of unit array
+        # using algorithms inspired by bubble sort
+        for i in range(raw_len-1):
+            for j in range(i+1, raw_len):
+                if raw_ar[i] > raw_ar[j]:
+                    inversion_cnt += 1
+                # elif raw_ar[i] == raw_ar[j]:
+                #     repeated_cnt += 1
+
+        if dup_num == 1:
+            print(f"#{t} {inversion_cnt}")
+            continue
+
+        # count repeated number of unit
+        unit_dict = dict()
+        for v in raw_ar:
+            if v in unit_dict:
+                unit_dict[v] += 1
+            else:
+                unit_dict[v] = 0
+        repeated_cnt = sum(unit_dict.values())
+
+        # print(f"unit array inversion_cnt : {inversion_cnt}")
+        # print(f"unit array repeated_cnt : {repeated_cnt}")
+
+        
+
+        inversion_cnt *= dup_num
+
+        inversion_cnt += int(raw_len*(raw_len - 1)/2 - repeated_cnt) * int(dup_num*(dup_num - 1)/2)
+        
+        inversion_cnt %= 10**9 + 7
+
+        print(f"#{t} {inversion_cnt}")
