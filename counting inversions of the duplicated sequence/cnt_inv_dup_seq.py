@@ -65,21 +65,22 @@ if __name__ == "__main__":
 
         # count repeated number of unit
         unit_dict = dict()
-        for v in raw_ar:
-            if v in unit_dict:
-                unit_dict[v] += 1
-            else:
-                unit_dict[v] = 0
-        repeated_cnt = sum(unit_dict.values())
+        for k in raw_ar:
+            unit_dict[k] = unit_dict.get(k, -1) + 1
+            # if v in unit_dict:
+            #     unit_dict[v] += 1
+            # else:
+            #     unit_dict[v] = 0
+
+        for v in unit_dict.values():
+            repeated_cnt += int(v*(v+1)/2)
 
         # print(f"unit array inversion_cnt : {inversion_cnt}")
         # print(f"unit array repeated_cnt : {repeated_cnt}")
 
-        
-
         inversion_cnt *= dup_num
 
-        inversion_cnt += int(raw_len*(raw_len - 1)/2 - repeated_cnt) * int(dup_num*(dup_num - 1)/2)
+        inversion_cnt += (int(raw_len*(raw_len - 1)/2) - repeated_cnt) * int(dup_num*(dup_num - 1)/2)
         
         inversion_cnt %= 10**9 + 7
 
