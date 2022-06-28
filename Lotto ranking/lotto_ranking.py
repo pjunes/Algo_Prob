@@ -16,7 +16,7 @@ def solution(lottos, win_nums):
     
     return answer
 
-def solution_model(lottos, win_nums):
+def solution_model1(lottos, win_nums):
 
     rank=[6,6,5,4,3,2,1]
 
@@ -46,6 +46,20 @@ if answer[1] > 6:
 다른 답안에서 해결방안을 찾았다.
 배열을 사용해 라벨링 후, 인덱스를 활용하는 방식이다.
 rank=[6,6,5,4,3,2,1]
-
-
 """
+
+# 위 문제에 특화된 방식으로 보인다.
+# 공통된 원소를 찾는 방식이기 때문에 set을 활용하여 풀이한 방식이다.
+# 또한 배열의 인덱스를 활용한 라벨링보다 좋은 방식으로 보이는 
+# dict를 활용해 라벨링하였다.
+def solution_model2(lottos, win_nums):
+    rank = {
+        0: 6,
+        1: 6,
+        2: 5,
+        3: 4,
+        4: 3,
+        5: 2,
+        6: 1
+    }
+    return [rank[len(set(lottos) & set(win_nums)) + lottos.count(0)], rank[len(set(lottos) & set(win_nums))]]
