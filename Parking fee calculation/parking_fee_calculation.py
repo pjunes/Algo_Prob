@@ -11,15 +11,77 @@ def solution(fees, records):
     # 차량 번호가 작은 자동차부터 청구할 주차 요금을 차례대로 정수 배열에 담아서 return
     answer = []  # type:list with integer
 
-    basic_time = fees[0]
-    basic_fee = fees[1]
-    unit_time = fees[2]
-    unit_fee = fees[3]
+    # basic_time = fees[0]
+    # basic_fee = fees[1]
+    # unit_time = fees[2]
+    # unit_fee = fees[3]
 
-    access_record = dict() # key serial : value in time
-    fee_record = dict() # key serial : value fee
+    basic_time, basic_fee, unit_time, unit_fee = fees
+
+    # print(f"basic_time : {basic_time}")
+    # print(f"basic_fee  : {basic_fee}")
+    # print(f"unit_time  : {unit_time}")
+    # print(f"unit_fee   : {unit_fee}")
+    # print()
+
+    # access_record = dict() # key (serial) : value (in time)
+    time_record = dict() # key (serial) : value (cumulative time)
+
+    # fee_record = dict() # key serial : value fee
     status_record = dict() # key serial : value in(True)\out(False)
 
+    for record in records: # record type:string "time serial in/out"
+        # print(f"record : {record}")
+
+        time_s, serial, detail = record.split(' ')
+        time = int(time_s[:2]) * 60 + int(time_s[3:]) # conversion "00:00" to 000 minutes (integer)
+
+        # print(f"time_s : {time_s}")
+        # print(f"serial : {serial}")
+        # print(f"detail : {detail}")
+        # print(f"time : {int(time_s[:2])} * 60 + int(time_s[3:]) => {time}")
+        # print(f" : {}")
+
+        if detail == "IN":
+            # print("IN")
+            status_record[serial] = [True, time]
+        else: # if detail == "out":
+            # print("OUT")
+            status_record[serial][0] = False
+            # print(f"before {time_record.get(serial, 0)}")
+            time_record[serial] = time_record.get(serial, 0) + (time - status_record[serial][1])
+            # print(f"after {time_record[serial]}")
+
+    for item in status_record.items():
+        if item[1][0] == True:
+            # print("no OUT")
+            # print(f"serial  : {item[0]}")
+            # print(f"IN time : {item[1][1]}")
+            # print(f"before {time_record.get(item[0], 0)}")
+            # time_record[serial] = time_record.get(serial, 0) + ((23*60+59) - item[1][1])
+            time_record[item[0]] = time_record.get(item[0], 0) + (1439 - item[1][1])
+            # print(f"after {time_record[item[0]]}")
+
+    for item in sorted(time_record.items()): # item[0] : serial / item[1] : cumulative time
+        unit = max(item[1] - basic_time, 0) / unit_time
+
+        # ceil unit
+        if unit%1:
+            unit = int(unit) + 1
+        else:
+            unit = int(unit)
+
+        answer.append(basic_fee + unit * unit_fee)
+
+    return answer
+
+if __name__ == "__main__":
+    sample_fees = [180, 5000, 10, 600]
+    sample_records = ["05:34 5961 IN", "06:00 0000 IN", "06:34 0000 OUT", "07:59 5961 OUT", "07:59 0148 IN", "18:59 0000 IN", "19:09 0148 OUT", "22:59 5961 IN", "23:00 5961 OUT"]
+    answer = solution(sample_fees, sample_records)
+    print(answer)
+
+"""
     for record in records: # record type:string "time serial in/out"
         time_s, serial, detail = record.split(' ')
         time = int(time_s[:2]) * 60 + int(time_s[3:]) # conversion "00:00" to 000 minutes (integer)
@@ -62,25 +124,4 @@ def solution(fees, records):
         answer.append(fee_record_sorted[i][1])
 
     return answer
-
-if __name__ == "__main__":
-#     a = 2.1
-#     b = 2
-
-#     print("a는 ",end="")
-#     if (a%1):
-#         print("유리수")
-#     else:
-#         print("정수")
-
-#     print("b는 ",end="")
-#     if (b%1):
-#         print("유리수")
-#     else:
-#         print("정수")
-#     print(a%1)
-#     print(b%1)
-    sample_fees = [180, 5000, 10, 600]
-    sample_records = ["05:34 5961 IN", "06:00 0000 IN", "06:34 0000 OUT", "07:59 5961 OUT", "07:59 0148 IN", "18:59 0000 IN", "19:09 0148 OUT", "22:59 5961 IN", "23:00 5961 OUT"]
-    answer = solution(sample_fees, sample_records)
-    print(answer)
+"""
