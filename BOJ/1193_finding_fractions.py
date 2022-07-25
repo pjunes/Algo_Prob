@@ -18,15 +18,46 @@ def solution(N):
     return f"{upper}/{lower}"
 
 def solution2(N):
-    return
+    upper = 1
+    lower = 0
+    turn_flag = True
+    inc_upper_flag = True
+    for i in range(N):
+        if turn_flag:
+            if upper == 1:
+                lower += 1
+                inc_upper_flag = True
+            else: # lower == 1
+                upper += 1
+                inc_upper_flag = False
+            
+            if upper + lower == 2:
+                turn_flag = True
+            else:
+                turn_flag = False
+            continue
+
+        if inc_upper_flag:
+            upper += 1
+            lower -= 1
+            if lower == 1:
+                turn_flag = True
+        else:
+            upper -= 1
+            lower += 1
+            if upper == 1:
+                turn_flag = True
+    return f"{upper}/{lower}"
 
 if __name__ == "__main__":
-    N = int(input())
-    answer = solution(N)
-    answer2 = solution2(N)
-    print(answer)
-    print(answer2)
-
+    # N = int(input())
+    # answer = solution(N)
+    # answer2 = solution2(N)
+    # print(answer)
+    # print(answer2)
+    for i in range(1, 10001):
+        if not solution(i) == solution2(i):
+            print(f"error!! i = {i}")
 
 """
 upper_inc = False
