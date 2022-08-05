@@ -1,3 +1,23 @@
+def solution(N):
+    if N == 1:
+        return 1
+
+    for i in range(2, N+1):
+        if N%i == 0:
+            print(i)
+            solution(N//i)
+            return 1
+
+        pass
+
+    return -1
+
+if __name__ == "__main__":
+    N = int(input())
+
+    solution(N)
+
+"""
 def solution(N, prime_ar):
     if N == 1:
         return 1
@@ -26,6 +46,14 @@ def prime_numbers_until_the_number(N): # return ar [int] # N >= 3
             prime_ar.append(i)
 
     return prime_ar
+
+if __name__ == "__main__":
+    N = int(input())
+
+    prime_ar = prime_numbers_until_the_number(N)
+    
+    solution(N, prime_ar)
+"""
 
 # def solution(N):
 #     if N == 1:
@@ -61,9 +89,3 @@ def prime_numbers_until_the_number(N): # return ar [int] # N >= 3
 
 #     return prime_ar
 
-if __name__ == "__main__":
-    N = int(input())
-
-    prime_ar = prime_numbers_until_the_number(N)
-    
-    solution(N, prime_ar)
