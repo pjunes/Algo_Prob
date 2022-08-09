@@ -31,26 +31,29 @@
 
 def solution(M, N):
     answer_ar = [n for n in range(M, N+1)]
+
+    pre_answer_ar = [n for n in range(3, M+1)]
     prime_ar = [2]
-    # print(f"initial answer_ar : {answer_ar}")
 
     idx = 0
+    pop_flag = False
+    # while_flag = True
     while True:
-        temp = prime_ar[idx]
-        while True:
-            for n in range(len(answer_ar)):
-                if answer_ar[n] % prime_ar[idx] == 0:
-                    answer_ar.pop(n)
-
+        for p in prime_ar:
+            if pop_flag:
+                continue
+            if pre_answer_ar[idx]%p == 0:
+                print(pre_answer_ar.pop(idx))
+                # pre_answer_ar.pop(idx)
+                pop_flag = True
+        pop_flag = False
+        idx += 1
+        if idx == len(pre_answer_ar):
+            break
+            
         pass
 
-    # for p in prime_ar:
-    #     for n in answer_ar:
-    #         if n == p:
-    #             continue
-    #         if n%p == 0:
-    #             # print(f"remove {n} / p : {p}, n : {n}, n%p : {n%p}")
-    #             answer_ar.remove(n)
+    print(pre_answer_ar)
 
     return answer_ar
 
@@ -64,8 +67,8 @@ if __name__ == "__main__":
     answer_ar = solution(M, N)
     # print(f"answer_ar : {answer_ar}")
 
-    for answer in answer_ar:
-        print(answer)
+    # for answer in answer_ar:
+    #     print(answer)
 
 """
 def solution(M, N):
