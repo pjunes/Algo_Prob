@@ -74,20 +74,20 @@ def find_case(memo, cv_ar, n, k):
 
     # check memo
     if not memo[n][k] == -1:
-        print(f"return {memo[n][k]}")
+        # print(f"return {memo[n][k]}")
         return memo[n][k]
 
     if n == 1:
         if k%cv_ar[n-1] == 0:
-            print(f"return 1")
+            # print(f"return 1")
             return 1
         else:
-            print(f"return 0")
+            # print(f"return 0")
             return 0
 
     # answer += find_case(memo, cv_ar, n-1, k)
 
-    print()
+    # print()
 
     for i in range(k//cv_ar[n-1]+1):
         answer += find_case(memo, cv_ar, n - 1, k - i * cv_ar[n-1])
