@@ -20,47 +20,56 @@ def solution():
     ### sort cv_ar ###
 
     # 오름차순 정렬
-    for i in range(n):
-        for j in range(i+1, n):
-            if cv_ar[i] > cv_ar[j]:
-                cv_ar[i], cv_ar[j] = cv_ar[j], cv_ar[i]
+    # for i in range(n):
+    #     for j in range(i+1, n):
+    #         if cv_ar[i] > cv_ar[j]:
+    #             cv_ar[i], cv_ar[j] = cv_ar[j], cv_ar[i]
 
     ### end ###
 
     ### generate memo ###
 
     # memo[k] : f(k)
-    # memo = [-1 for _ in range(k+1)]
-
-    memo = [[-1 for _ in range(k+1)] for _ in range(n+1)]
-    # 세로축 : cv_ar의 idx
-    # 가로축 : k
+    memo = [0 for _ in range(k+1)]
 
     # algorithm의 동작을 위해 k=0 일 때의 값을 1로 설정
     # 0원에서 한 코인만을 사용해 k원을 만들었을 경우의 수를 의미
-    for i in range(n):
-        memo[i][0] = 1
+    memo[0] = 1
+    
+    # 세로축 : cv_ar의 idx
+    # 가로축 : k
+    # memo = [[-1 for _ in range(k+1)] for _ in range(n+1)]
+    # algorithm의 동작을 위해 k=0 일 때의 값을 1로 설정
+    # 0원에서 한 코인만을 사용해 k원을 만들었을 경우의 수를 의미
+    # for i in range(n):
+    #     memo[i][0] = 1
 
     ### end ###
 
     # print(f"cv_ar : {cv_ar}\n")
     # print(f"set_ar : {set_ar}\n")
 
-    answer = find_case(memo, cv_ar, n, k)
+    answer = for_loop(memo, cv_ar, k)
 
     return answer
 
-# def for_loop(memo, cv_ar, k):
-#     answer = 0
+def for_loop(memo, cv_ar, k):
+    answer = 0
+    n = len(cv_ar)
 
-#     if not memo[k] == -1:
-#         return memo[k]
+    # if not memo[k] == -1:
+    #     return memo[k]
 
-#     for v in cv_ar:
-#         pass
+    for v in cv_ar:
+        for i in range(1, k+1):
+            if i - v >= 0:
+                memo[i] += memo[i-v]
 
-#     return answer
+    answer = memo[k]
 
+    return answer
+
+"""
 # k : k target value
 # n : 사용한 코인의 개수
 def find_case(memo, cv_ar, n, k):
@@ -96,6 +105,7 @@ def find_case(memo, cv_ar, n, k):
     # print(f"n({n}), k({k}) : answer({answer})")
     
     return answer
+"""
 
 if __name__ == "__main__":
     answer = solution()
